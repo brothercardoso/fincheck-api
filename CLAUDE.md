@@ -36,20 +36,25 @@ pnpm prisma db push     # Push schema changes without migrations
 ## Architecture
 
 ### Module Structure
+
 NestJS modules follow the pattern: `module.ts`, `controller.ts`, `service.ts`, `dto/` folder.
 
 ### Database Layer
-- **PrismaService** (`src/database/prisma.service.ts`): Extends PrismaClient, uses `@prisma/adapter-pg` for PostgreSQL
+
+- **PrismaService** (`src/shared/database/prisma.service.ts`): Extends PrismaClient, uses `@prisma/adapter-pg` for PostgreSQL
+- **DatabaseModule** (`src/shared/database/database.module.ts`): Global module that provides PrismaService and repositories
 - **Generated Client**: Prisma generates client to `src/generated/prisma/` (not `node_modules`)
 - **Schema**: `prisma/schema.prisma` - uses snake_case for table/column names via `@@map` and `@map`
 
 ### Data Models
+
 - **User**: Has bank accounts, categories, and transactions
 - **BankAccount**: Types are CHECKING, INVESTMENT, CASH (via `BankAccountType` enum)
 - **Category**: Transaction categories with type (INCOME/OUTCOME)
 - **Transaction**: Links user, bank account, and optional category
 
 ### Validation
+
 Uses `class-validator` decorators in DTOs with global `ValidationPipe` enabled in `main.ts`.
 
 ## Environment
@@ -59,23 +64,28 @@ Requires `DATABASE_URL` environment variable for PostgreSQL connection. Uses `do
 ## Issues e Tasks do Curso
 
 ### Bugs/Correções
+
 - [x] Corrigir typo no enum `CHECHING` -> `CHECKING` em `prisma/schema.prisma:24`
-- [ ] Corrigir teste E2E que espera `'Hello World!'` mas service retorna `'Hello World'`
+- [x] ~~Corrigir teste E2E~~ - Removido junto com app.controller/service (não mais necessário)
 
 ### Segurança
-- [ ] Implementar hash de senha com bcrypt no `UsersService.create()`
+
+- [x] Implementar hash de senha com bcrypt no `UsersService.create()`
 - [ ] Adicionar autenticação JWT
 
 ### Melhorias de Arquitetura
-- [ ] Criar `DatabaseModule` global para o `PrismaService` (evitar injeção repetida em cada módulo)
-- [ ] Adicionar tratamento de erros para email duplicado no cadastro de usuário
+
+- [x] Criar `DatabaseModule` global para o `PrismaService` (evitar injeção repetida em cada módulo)
+- [x] Adicionar tratamento de erros para email duplicado no cadastro de usuário
 
 ### Módulos a Implementar
+
 - [ ] `BankAccountModule` - CRUD de contas bancárias
 - [ ] `CategoryModule` - CRUD de categorias
 - [ ] `TransactionModule` - CRUD de transações
 
 ### Estrutura de Dados
+
 ```
 User (1) ──┬── (*) BankAccount ──── (*) Transaction
            ├── (*) Category ─────────────┘
