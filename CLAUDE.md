@@ -61,7 +61,8 @@ Uses `class-validator` decorators in DTOs with global `ValidationPipe` enabled i
 
 - **JWT-based**: Uses `@nestjs/jwt` with global `AuthGuard`
 - **Endpoints**: `POST /auth/signin` (login), `POST /auth/signup` (register with auto-login)
-- **Protected routes**: All routes require valid JWT except auth endpoints
+- **Protected routes**: All routes require valid JWT by default
+- **Public routes**: Use `@IsPublic()` decorator (`src/shared/decorators/IsPublic.ts`) to bypass auth
 - **User context**: `request.userId` available in protected routes
 
 ### Environment Validation
